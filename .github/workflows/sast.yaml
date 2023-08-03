@@ -1,19 +1,11 @@
+name: Example workflow for Maven using Snyk
+on: push
 jobs:
-
-  build:
-     runs-on: ubuntu-latest
-
-
-     steps:
-     - uses: actions/checkout@v2
-     - name: Set up JDK 11
-       with:
-          java-version: '11'
-          distribution: 'temurin'
-          cache: maven
- 
-     - name: SonarCloud Scan
-       run: mvn -B verify  sonar:sonar -Dsonar.host.url=https://sonarcloud.io/ -Dsonar.organization=sastlab-Dsonar.projectKey=javaprojectlab -Dsonar.login=$SONAR_TOKEN
-       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/maven@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
